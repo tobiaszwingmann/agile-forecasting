@@ -31,7 +31,7 @@ def burn_down_forecast(df, total_scope, scope_type):
     _ = ax.grid(True)
     _ = ax.legend()
 
-    # plt.close(fig)
+    plt.close(fig)
 
     return fig
     
@@ -122,7 +122,7 @@ def monte_carlo_burndown(simulation_data, scope_type='story_points', sample_size
     _ = ax.set_title(f'Monte Carlo Burn-Down Forecasts')
     _ = ax.set_xlabel('Months')
     _ = ax.set_ylabel(f'Work Remaining ({scope_type})')
-    # plt.close(fig)
+    plt.close(fig)
     
     return fig
 
@@ -158,7 +158,7 @@ def monte_carlo_histogram(simulation_data, percentile=85):
     _ = ax2.set_ylabel('Frequency')
     _ = ax2.legend()
 
-    # plt.close(fig2)
+    plt.close(fig2)
 
     return fig2
 
