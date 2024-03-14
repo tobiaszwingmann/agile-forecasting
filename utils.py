@@ -32,7 +32,7 @@ def burn_down_forecast(df, total_scope, scope_type):
     _ = ax.legend()
     
 
-def monte_carlo_simulation(df, total_scope=None, scope_type='story_points', scope_range=None, delivery_pace_variation_factor=1.0, trials=1000, percentile=85):
+def monte_carlo_simulation(df, total_scope=None, scope_type='story_points', scope_range=None, delivery_pace_factor=1.0, trials=1000, percentile=85):
     """
     Runs a Monte Carlo Simulation to estimate completion times for a given project based on historical data.
 
@@ -41,7 +41,7 @@ def monte_carlo_simulation(df, total_scope=None, scope_type='story_points', scop
     - total_scope (float): Total scope of the project. If None, the range is used.
     - scope_type (str): Type of scope, either 'story_points' or 'throughput'.
     - scope_range (tuple): Range of possible total scope as (min, max). Default is None.
-    - delivery_pace_variation_factor (float): Factor to control the variation in delivery pace.
+    - delivery_pace_factor (float): Factor to adjust the average delivery pace and its variation.
     - trials (int): Number of Monte Carlo simulation trials to run.
     - sample_size (int): Size of the sample for each trial.
     - percentile (float): Percentile value for completion time estimation.
@@ -69,12 +69,12 @@ def monte_carlo_simulation(df, total_scope=None, scope_type='story_points', scop
     else:  # scope_type == 'throughput'
         delivery_pace_data = df.groupby('TimeUnit').size()
 
-    avg_delivery_pace = delivery_pace_data.mean()
-    std_dev_delivery_pace = delivery_pace_data.std()
+    avg_delivery_pace = delivery_pace_data.mean() * delivery_pace_factor
+    std_dev_delivery_pace = delivery_pace_data.std() * delivery_pace_factor
 
     # Define delivery pace range
-    delivery_pace_range = (max(avg_delivery_pace - std_dev_delivery_pace * delivery_pace_variation_factor, 0),
-                           avg_delivery_pace + std_dev_delivery_pace * delivery_pace_variation_factor)
+    delivery_pace_range = (max(avg_delivery_pace - std_dev_delivery_pace, 0),
+                           avg_delivery_pace + std_dev_delivery_pace)
 
     # Monte Carlo Simulation
     simulations = []
